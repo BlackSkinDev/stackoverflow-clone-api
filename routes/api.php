@@ -38,6 +38,9 @@ Route::namespace('Api')->group(function(){
                 //endpoint to downvote  a question
                 Route::get('{question}/downvote', 'QuestionController@downvote')->name('downvote-question');
 
+                //endpoint to show question and its related properties
+                Route::get('{question}/{slug}', 'QuestionController@show')->name('show-question');
+
 
             });
 

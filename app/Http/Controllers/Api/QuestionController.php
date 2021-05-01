@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\QuestionRequest;
+use App\Http\Resources\QuestionResource;
 use App\Models\Question;
 use App\Models\Vote;
 use JWTAuth;
@@ -111,5 +112,19 @@ class QuestionController extends Controller
         }
         return false;
     }
+
+
+    // function to show  question
+    public function show($question){
+
+
+        $question=Question::where('id',$question)->with('answers')->first();
+
+        return response()->json([
+            'question' => new QuestionResource($question),
+        ], Response::HTTP_OK);
+
+    }
+
 
 }
