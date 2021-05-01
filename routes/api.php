@@ -19,17 +19,28 @@ Route::namespace('Api')->group(function(){
         Route::prefix('auth')->group(function () {
 
             // register and login routes
-              Route::post('/register', 'UserController@register');
-              Route::post('/login', 'UserController@login');
+              Route::post('/register', 'UserController@register')->name('register');
+              Route::post('/login', 'UserController@login')->name('login');
         });
 
         //protected routes
         Route::middleware(['myapi'])->group(function () {
 
-            Route::prefix('questions')->group(function () {
+            // question related endpoints
+            Route::prefix('question')->group(function () {
 
                 //endpoint to post a new question
-                Route::post('/create', 'QuestionController@store');
+                Route::post('/create', 'QuestionController@store')->name('store-question');
+
+            });
+
+
+            // answer related endpoints
+            Route::prefix('answer')->group(function () {
+
+                //endpoint to post a answer for a question
+                Route::post('{question}/reply', 'AnswerController@reply')->name('send-reply');
+
             });
 
 
