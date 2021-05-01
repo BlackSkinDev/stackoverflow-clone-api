@@ -16,11 +16,23 @@ use Illuminate\Support\Facades\Route;
 
 Route::namespace('Api')->group(function(){
 
-    Route::prefix('auth')->group(function () {
+        Route::prefix('auth')->group(function () {
 
-        // register and login routes
-          Route::post('/register', 'UserController@register');
-          Route::post('/login', 'UserController@login');
-    });
+            // register and login routes
+              Route::post('/register', 'UserController@register');
+              Route::post('/login', 'UserController@login');
+        });
+
+        //protected routes
+        Route::middleware(['myapi'])->group(function () {
+
+            Route::prefix('questions')->group(function () {
+
+                //endpoint to post a new question
+                Route::post('/create', 'QuestionController@store');
+            });
+
+
+        });
 
 });

@@ -28,6 +28,7 @@ class UserController extends Controller
 
     }
 
+    //login function
     public function login(LoginFormRequest $request){
 
         $input = $request->only('email', 'password');
