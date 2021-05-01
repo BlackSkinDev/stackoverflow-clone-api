@@ -49,6 +49,13 @@ class QuestionController extends Controller
                 ], Response::HTTP_OK);
             }
 
+            // upvote
+            $vote->increment('status');
+            return response()->json([
+                'message' => 'You just upvoted this question!',
+            ], Response::HTTP_OK);
+
+
         }
 
         Vote::create([
@@ -61,6 +68,41 @@ class QuestionController extends Controller
         ], Response::HTTP_OK);
     }
 
+
+    //downvote question
+    public function downvote(Question $question){
+        if ($this->hasVote($this->user,$question->id)){
+
+            $vote=Vote::where('question_id',$question->id)
+                ->where('user_id',$this->user->id)->first();
+            $status=$vote->status;
+
+            if (!$status){
+                return response()->json([
+                    'message' => 'You have already downvoted this question!',
+                ], Response::HTTP_OK);
+            }
+
+            // downvote
+            $vote->decrement('status');
+            return response()->json([
+                'message' => 'You just downvoted this question!',
+            ], Response::HTTP_OK);
+
+        }
+
+        Vote::create([
+            'question_id'=>$question->id,
+            'user_id'=>$this->user->id,
+            'status'=>0
+        ]);
+        return response()->json([
+            'message' => 'You just downvoted question'
+        ], Response::HTTP_OK);
+    }
+
+
+
     // function to check if user has either upvoted/downvoted question
     public function hasVote($user,$question_id){
         $userHasVote= Vote::where('question_id',$question_id)
@@ -69,13 +111,6 @@ class QuestionController extends Controller
             return true;
         }
         return false;
-    }
-
-
-    public function downvote(Question $question){
-        return response()->json([
-            'message' => 'Downvoted!'
-        ], Response::HTTP_OK);
     }
 
 }
