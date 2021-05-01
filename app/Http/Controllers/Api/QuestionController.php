@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\QuestionRequest;
 use App\Models\Question;
+use App\Models\Vote;
 use JWTAuth;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -15,10 +16,12 @@ class QuestionController extends Controller
     protected $user;
 
     public function __construct(){
+        // get currently authenticated user
         $this->user = JWTAuth::user();
 
     }
 
+    // store/ask question
     public function store(QuestionRequest $request){
          $this->user->questions()->create([
             'title'=>$request['title'],
@@ -28,6 +31,50 @@ class QuestionController extends Controller
         ]);
         return response()->json([
             'message' => 'Question saved successfully'
+        ], Response::HTTP_OK);
+    }
+
+    // upvote question
+    public function upvote(Question $question){
+
+        if ($this->hasVote($this->user,$question->id)){
+
+            $vote=Vote::where('question_id',$question->id)
+                ->where('user_id',$this->user->id)->first();
+            $status=$vote->status;
+
+            if ($status){
+                return response()->json([
+                    'message' => 'You have already upvoted this question!',
+                ], Response::HTTP_OK);
+            }
+
+        }
+
+        Vote::create([
+           'question_id'=>$question->id,
+            'user_id'=>$this->user->id,
+            'status'=>1
+        ]);
+        return response()->json([
+            'message' => 'You just upvoted question'
+        ], Response::HTTP_OK);
+    }
+
+    // function to check if user has either upvoted/downvoted question
+    public function hasVote($user,$question_id){
+        $userHasVote= Vote::where('question_id',$question_id)
+            ->where('user_id',$user->id)->count();
+        if ($userHasVote){
+            return true;
+        }
+        return false;
+    }
+
+
+    public function downvote(Question $question){
+        return response()->json([
+            'message' => 'Downvoted!'
         ], Response::HTTP_OK);
     }
 

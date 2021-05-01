@@ -32,6 +32,13 @@ Route::namespace('Api')->group(function(){
                 //endpoint to post a new question
                 Route::post('/create', 'QuestionController@store')->name('store-question');
 
+                //endpoint to upvote a question
+                Route::get('{question}/upvote', 'QuestionController@upvote')->name('upvote-question');
+
+                //endpoint to downvote  a question
+                Route::get('{question}/downvote', 'QuestionController@downvote')->name('downvote-question');
+
+
             });
 
 
@@ -42,6 +49,8 @@ Route::namespace('Api')->group(function(){
                 Route::post('{question}/reply', 'AnswerController@reply')->name('send-reply');
 
             });
+
+
 
 
         });
