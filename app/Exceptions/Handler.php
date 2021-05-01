@@ -2,9 +2,11 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
-
+use Illuminate\Http\Response;
 class Handler extends ExceptionHandler
 {
     /**
@@ -37,4 +39,11 @@ class Handler extends ExceptionHandler
             //
         });
     }
+    public function render($request ,Throwable $e){
+        if($e instanceof  ModelNotFoundException || $e instanceof NotFoundHttpException){
+            return response()->json(['message'=>'request not found'],Response::HTTP_NOT_FOUND);
+        }
+        return response()->json(['message'=>$e->getMessage()],Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
 }
