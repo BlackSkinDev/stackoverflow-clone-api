@@ -102,7 +102,6 @@ class QuestionController extends Controller
     }
 
 
-
     // function to check if user has either upvoted/downvoted question
     public function hasVote($user,$question_id){
         $userHasVote= Vote::where('question_id',$question_id)

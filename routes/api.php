@@ -48,6 +48,13 @@ Route::namespace('Api')->group(function(){
                 //endpoint to post a answer for a question
                 Route::post('{question}/reply', 'AnswerController@reply')->name('send-reply');
 
+                //endpoint to upvote an answer
+                Route::get('{answer}/upvote', 'AnswerController@upvote')->name('upvote-answer');
+
+                //endpoint to downvote  an answer
+                Route::get('{answer}/downvote', 'AnswerController@downvote')->name('downvote-answer');
+
+
             });
 
 
