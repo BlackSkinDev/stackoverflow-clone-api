@@ -31,16 +31,8 @@ class DatabaseSeeder extends Seeder
                 'user_id'=>$question->user_id,
                 'question_id'=>$question->id
             ])->each(function ($answer){
-                $key=['question_id','answer_id'];
-                $key=$key[array_rand($key)];
-                if ($key=='question_id'){
-                    $value=$answer->question_id;
-                }
-                else{
-                    $value=$answer->id;
-                }
+
                \App\Models\Vote::factory(3)->create([
-                    $key=> $value,
                     'user_id'=>$answer->user_id,
                     'status'=>rand(0,1)
                ]);

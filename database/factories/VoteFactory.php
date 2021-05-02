@@ -25,6 +25,7 @@ class VoteFactory extends Factory
      */
     public function definition()
     {
+
         return [
             'answer_id' =>Answer::factory(),
             'user_id'=>User::factory(),
