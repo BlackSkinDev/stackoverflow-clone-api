@@ -31,7 +31,7 @@ class AnswerController extends Controller
 
         NewAnswer::dispatch($question);
         return response()->json([
-            'message' => "Answed saved successfully"
+            'message' => 'Answer saved'
         ], Response::HTTP_OK);
     }
 
