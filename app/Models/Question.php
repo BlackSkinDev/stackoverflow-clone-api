@@ -29,4 +29,9 @@ class Question extends Model
         return Vote::where('question_id',$this->id)
             ->where('status',1)->count();
     }
+
+    public  function subscribers(){
+        return $this->hasMany(Subscription::class)->join('users','users.id','=','subscriptions.user_id')->select('users.*');
+
+    }
 }

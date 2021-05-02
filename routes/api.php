@@ -27,7 +27,7 @@ Route::namespace('Api')->group(function(){
         Route::middleware(['myapi'])->group(function () {
 
             // question related endpoints
-            Route::prefix('question')->group(function () {
+            Route::prefix('questions')->group(function () {
 
                 //endpoint to post a new question
                 Route::post('/create', 'QuestionController@store')->name('store-question');
@@ -39,14 +39,17 @@ Route::namespace('Api')->group(function(){
                 Route::get('{question}/downvote', 'QuestionController@downvote')->name('downvote-question');
 
                 //endpoint to show question and its related properties
-                Route::get('{question}/{slug}', 'QuestionController@show')->name('show-question');
+                Route::get('{question}', 'QuestionController@show')->name('show-question');
 
+                //endpoint to show question and its related properties
+                Route::get('/{question}/subscribe', 'SubscribeController@subscribe')->name('subscribe');
+                // questions/id
 
             });
 
 
             // answer related endpoints
-            Route::prefix('answer')->group(function () {
+            Route::prefix('answers')->group(function () {
 
                 //endpoint to post a answer for a question
                 Route::post('{question}/reply', 'AnswerController@reply')->name('send-reply');

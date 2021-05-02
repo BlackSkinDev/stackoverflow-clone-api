@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AnswerRequest;
+use App\Jobs\NewAnswer;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Vote;
@@ -22,12 +23,15 @@ class AnswerController extends Controller
 
     // answer a question
     public function reply(AnswerRequest $request, Question $question){
+
         $this->user->answers()->create([
             'answer'=>$request['answer'],
             'question_id'=>$question->id
         ]);
+
+        NewAnswer::dispatch($question);
         return response()->json([
-            'message' => 'Answer saved successfully'
+            'message' => "Answed saved successfully"
         ], Response::HTTP_OK);
     }
 
@@ -39,6 +43,7 @@ class AnswerController extends Controller
             $vote=Vote::where('answer_id',$answer->id)
                 ->where('user_id',$this->user->id)->first();
             $status=$vote->status;
+
 
             if ($status){
                 return response()->json([
