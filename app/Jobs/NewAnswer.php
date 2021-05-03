@@ -41,12 +41,10 @@ class NewAnswer implements ShouldQueue
 
         // notify question subscribers
 
-        $subscribers= $this->question->subscribers()->get();
-
-        foreach ($subscribers as $subscriber){
-            $user=User::find($subscriber->id);
-            $user->notify(new  \App\Notifications\NewAnswer($this->question));
-        }
+        $subscribers= $this->question->subscribers();
+        $userIds=$subscribers->pluck('id');
+        $users=User::find($userIds);
+        Notification::send($users, new \App\Notifications\NewAnswer($this->question));
 
     }
 }
