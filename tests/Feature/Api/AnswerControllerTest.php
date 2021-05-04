@@ -2,13 +2,16 @@
 
 namespace Tests\Feature\Api;
 
+use App\Jobs\NewAnswer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 use Faker\Factory;
 use Illuminate\Http\Response;
 use JWTAuth;
 use Illuminate\Support\Str;
+
 
 
 class AnswerControllerTest extends TestCase
@@ -35,6 +38,17 @@ class AnswerControllerTest extends TestCase
     /** @test  */
     public function logged_in_user_can_answer_a_question()
     {
+        Queue::fake();
+        $myUser= \App\Models\User::factory()->create();
+        $myUserToken= JWTAuth::fromUser($this->user);
+
+        $response=$this->withHeaders(['Authorization' => "Bearer {$myUserToken}",])->json('GET',"api/questions/{$this->question->id}/subscribe");
+        $response->assertStatus(Response::HTTP_OK)
+            ->assertExactJson([
+                'message' => 'You have successfully subscribed to  question'
+            ]);
+
+
         $response=$this->withHeaders(['Authorization' => "Bearer {$this->token}",])->json('POST',"api/answers/{$this->question->id}/reply",[
             'answer'=>$title= $this->faker->text(50),
             'question_id'=>$this->question->id,
@@ -43,6 +57,8 @@ class AnswerControllerTest extends TestCase
             ->assertExactJson([
                 'message' => 'Answer saved'
             ]);
+        //$this->expectsJobs(NewAnswer::class);
+        Queue::assertPushed(NewAnswer::class);
     }
 
     /** @test  */
