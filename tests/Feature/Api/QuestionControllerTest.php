@@ -13,7 +13,7 @@ use JWTAuth;
 
 class QuestionControllerTest extends TestCase
 {
-   //use RefreshDatabase;
+   use RefreshDatabase;
 
     protected $user;
     protected $token;
