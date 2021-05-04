@@ -30,13 +30,7 @@ class DatabaseSeeder extends Seeder
                 'answer'=>$this->faker->text(50),
                 'user_id'=>$question->user_id,
                 'question_id'=>$question->id
-            ])->each(function ($answer){
-
-               \App\Models\Vote::factory(3)->create([
-                    'user_id'=>$answer->user_id,
-                    'status'=>rand(0,1)
-               ]);
-            });
+            ]);
         });
     }
 }
