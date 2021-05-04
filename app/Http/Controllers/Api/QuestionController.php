@@ -32,7 +32,7 @@ class QuestionController extends Controller
         ]);
         return response()->json([
             'message' => 'Question saved successfully'
-        ], Response::HTTP_OK);
+        ], Response::HTTP_CREATED);
     }
 
     // upvote question
